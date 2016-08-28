@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">链接助手</string>
+    <string name="tip">  免费提交：由服务器处理一天的点击任务。\n\n  自动提交：观看广告后会随机获得1~5天的自动提交时间。自动提交时间可以累加。\n\n  广告说明：广告为视频广告，在网络不好的情况下请求不到，如果是使用流量观看请当心您的话费。一天最多只能请求20次广告，超过次数将请求不到。</string>
+    <string name="free_btn_text">免费提交一天</string>
+    <string name="ad_btn_text">点击广告自动提交</string>
+    <string name="address_text_hint">请在此处输入链接地址</string>
+    <string name="Confirm">确定</string>
+    <string name="Warm_Tip">温馨友情提示</string>
+    <string name="connect_to_server_successfully">连接服务器成功</string>
+    <string name="server_is_processing_please_wait">服务器正在处理，请稍候</string>
+    <string name="sending_ad_request">正在发送广告请求</string>
+    <string name="address_cannot_be_empty">请输入您的地址</string>
+    <string name="no_ad_available">暂无可用广告</string>
+    <string name="Related_programs_were_not_found">相关程序未找到</string>
+    <string name="watch_ad_under_non_wifi">您现在处于非WiFi环境,继续观看广告可能会耗费您的话费,确定继续吗?</string>
+    <string name="Cancel">取消</string>
+    <string name="networdk_not_available">未连接到网络,请检查您的网络连接!</string>
+</resources>

@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "1056072555392",
+    "firebase_url": "https://admob-app-id-7916853405.firebaseio.com",
+    "project_id": "admob-app-id-7916853405",
+    "storage_bucket": "admob-app-id-7916853405.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1056072555392:android:a52fab2edf22ccdb",
+        "android_client_info": {
+          "package_name": "org.fastgame.bbt"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1056072555392-shav920065qs4vnqola0rhmmml9gjkbd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCKr-sIyeeK9Cy9a0qQtLCAivTnTeKLr3k"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
