@@ -127,6 +127,7 @@
     <orderEntry type="library" exported="" name="autobahn-0.5.0" level="project" />
     <orderEntry type="library" exported="" name="eventbus-3.0.0" level="project" />
     <orderEntry type="library" exported="" name="firebase-analytics-impl-9.2.0" level="project" />
+    <orderEntry type="library" exported="" name="QuickIntegrater" level="project" />
     <orderEntry type="library" exported="" name="play-services-ads-9.2.0" level="project" />
     <orderEntry type="library" exported="" name="play-services-ads-lite-9.2.0" level="project" />
     <orderEntry type="library" exported="" name="firebase-ads-9.2.0" level="project" />

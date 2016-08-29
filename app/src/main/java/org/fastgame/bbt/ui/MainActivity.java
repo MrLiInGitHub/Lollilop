@@ -56,6 +56,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private TextView mTipView;
     private ProgressDialog mProgressDialog;
     private AlertDialog mAlertDialog;
+    private View mShareBtn;
 
     private IFlytekUpdate mUpdateManager;
     private boolean isRequestSuccessful;
@@ -181,11 +182,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         mFreeSubmitBtn = (Button) findViewById(R.id.free_submit_btn);
         mAdSubmitBtn = (Button) findViewById(R.id.ad_submit_btn);
         mTipView = (TextView) findViewById(R.id.tip);
+        mShareBtn = findViewById(R.id.btn_share);
 
         mAdSubmitBtn.setOnClickListener(this);
         mFreeSubmitBtn.setOnClickListener(this);
+        mShareBtn.setOnClickListener(this);
 
         mTipView.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/cuhuoyijianti.ttf"));
+
     }
 
     private void checkUpdate() {
@@ -316,6 +320,17 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         ActivityUtils.startAdColonyActivityForResult(this, RequestCode.REQUEST_CODE_WATCH_AD);
     }
 
+    private void shareApp() {
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("text/plain");
+        intent.putExtra(Intent.EXTRA_SUBJECT, UIUtils.getString(R.string.inviting_title));
+        intent.putExtra(Intent.EXTRA_TEXT, UIUtils.getString(R.string.inviting_words, UIUtils.getString(R.string.app_name)));
+        intent.putExtra(Intent.EXTRA_TITLE, UIUtils.getString(R.string.inviting_title));
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+        ActivityUtils.startActivitySafely(mContext, Intent.createChooser(intent, UIUtils.getString(R.string.inviting_title)));
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -324,6 +339,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 break;
             case R.id.ad_submit_btn:
                 requestAdvertisement();
+                break;
+            case R.id.btn_share:
+                shareApp();
                 break;
         }
     }
