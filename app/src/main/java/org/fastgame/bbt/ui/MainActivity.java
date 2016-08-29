@@ -16,6 +16,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+import com.iflytek.autoupdate.IFlytekUpdate;
+import com.iflytek.autoupdate.IFlytekUpdateListener;
+import com.iflytek.autoupdate.UpdateConstants;
+import com.iflytek.autoupdate.UpdateErrorCode;
+import com.iflytek.autoupdate.UpdateInfo;
+import com.iflytek.autoupdate.UpdateType;
 
 import org.fastgame.bbt.BBT;
 import org.fastgame.bbt.R;
@@ -48,10 +54,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private Button mFreeSubmitBtn;
     private Button mAdSubmitBtn;
     private TextView mTipView;
-
     private ProgressDialog mProgressDialog;
     private AlertDialog mAlertDialog;
 
+    private IFlytekUpdate mUpdateManager;
     private boolean isRequestSuccessful;
 
     private Handler mHandler = new Handler() {
@@ -66,6 +72,21 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                         isRequestSuccessful = false;
                     }
                     break;
+            }
+        }
+    };
+
+    private IFlytekUpdateListener mIFlytekUpdateListener = new IFlytekUpdateListener() {
+        @Override
+        public void onResult(int i, UpdateInfo updateInfo) {
+            if (i == UpdateErrorCode.OK && updateInfo != null) {
+                if (updateInfo.getUpdateType() == UpdateType.NoNeed) {
+                    showAlertDialog(UIUtils.getString(R.string.no_need_to_update));
+                    return;
+                }
+                mUpdateManager.showUpdateInfo(MainActivity.this, updateInfo);
+            } else {
+                showAlertDialog(UIUtils.getString(R.string.requesting_update_error, i));
             }
         }
     };
@@ -138,6 +159,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         requestFullScreen();
 
         initView();
+        checkUpdate();
 
         EventBus.getDefault().register(MainActivity.this);
     }
@@ -164,6 +186,16 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         mFreeSubmitBtn.setOnClickListener(this);
 
         mTipView.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/cuhuoyijianti.ttf"));
+    }
+
+    private void checkUpdate() {
+        mUpdateManager = IFlytekUpdate.getInstance(mContext);
+        mUpdateManager.setDebugMode(true);
+        mUpdateManager.setParameter(UpdateConstants.EXTRA_WIFIONLY, "true");
+        mUpdateManager.setParameter(UpdateConstants.EXTRA_NOTI_ICON, "true");
+        mUpdateManager.setParameter(UpdateConstants.EXTRA_STYLE, UpdateConstants.UPDATE_UI_DIALOG);
+
+        mUpdateManager.autoUpdate(mContext, mIFlytekUpdateListener);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -265,6 +297,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private void requestAdvertisement() {
 
         if (!checkAddressContent()) {
+            return;
+        }
+
+        if (!NetworkUtils.isNetworkAvailable()) {
+            showAlertDialog(UIUtils.getString(R.string.networdk_not_available));
             return;
         }
 

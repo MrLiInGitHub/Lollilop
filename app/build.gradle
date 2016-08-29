@@ -3,7 +3,6 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.2"
-
     defaultConfig {
         applicationId "org.fastgame.bbt"
         minSdkVersion 9
@@ -33,4 +32,5 @@ dependencies {
     compile 'com.neovisionaries:nv-websocket-client:1.30'
     compile 'org.greenrobot:eventbus:3.0.0'
     compile files('libs/chartboost.jar')
+    compile files('libs/AutoUpdate_SDK.jar')
 }

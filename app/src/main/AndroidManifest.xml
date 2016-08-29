@@ -50,6 +50,11 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen"
             android:configChanges="keyboardHidden|orientation|screenSize" />
 
+        <!-- 科大讯飞自动更新 -->
+        <activity android:name="com.iflytek.autoupdate.IFlytekUpdateDialog"/>
+        <service android:name="com.iflytek.autoupdate.IFlytekDownloadService"/>
+
+        <meta-data android:name="IFLYTEK_APPKEY" android:value="57c3a4f4"/>
     </application>
 
 </manifest>

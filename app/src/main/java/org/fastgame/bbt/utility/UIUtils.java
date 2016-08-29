@@ -43,6 +43,10 @@ public class UIUtils {
         return BBT.getAppContext().getString(resId);
     }
 
+    public static String getString(@StringRes int resId, Object... args) {
+        return BBT.getAppContext().getString(resId, args);
+    }
+
     public static AlertDialog showAlertDialog(Context context, CharSequence message, DialogInterface.OnClickListener confirmListener) {
         AlertDialog alertDialog = new AlertDialog.Builder(context).create();
 

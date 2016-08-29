@@ -15,4 +15,6 @@
     <string name="watch_ad_under_non_wifi">您现在处于非WiFi环境,继续观看广告可能会耗费您的话费,确定继续吗?</string>
     <string name="Cancel">取消</string>
     <string name="networdk_not_available">未连接到网络,请检查您的网络连接!</string>
+    <string name="no_need_to_update">已是最新版本</string>
+    <string name="requesting_update_error">请求更新失败,错误码 %1$d</string>
 </resources>
