@@ -157,7 +157,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        requestFullScreen();
 
         initView();
         checkUpdate();
@@ -317,7 +316,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     }
 
     private void showAdActivity() {
-        ActivityUtils.startAdColonyActivityForResult(this, RequestCode.REQUEST_CODE_WATCH_AD);
+//        ActivityUtils.startAdColonyActivityForResult(this, RequestCode.REQUEST_CODE_WATCH_AD);
+        ActivityUtils.startAdColonyV4VCActivityForResult(this, RequestCode.REQUEST_CODE_WATCH_AD);
     }
 
     private void shareApp() {

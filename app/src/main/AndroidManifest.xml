@@ -32,6 +32,10 @@
             android:configChanges="orientation|keyboard|keyboardHidden|screenSize"
             android:screenOrientation="portrait"/>
 
+        <activity android:name=".ui.AdColonyV4VCActivity"
+            android:configChanges="orientation|keyboard|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"/>
+
         <activity android:name=".ui.ChartboostActivity"
             android:configChanges="orientation|keyboard|keyboardHidden|screenSize"
             android:screenOrientation="portrait"/>
@@ -60,7 +64,7 @@
         <activity android:name="com.iflytek.autoupdate.IFlytekUpdateDialog"/>
         <service android:name="com.iflytek.autoupdate.IFlytekDownloadService"/>
 
-        <meta-data android:name="IFLYTEK_APPKEY" android:value="57c3a4f4"/>
+        <meta-data android:name="IFLYTEK_APPKEY" android:value="57c55e77"/>
     </application>
 
 </manifest>

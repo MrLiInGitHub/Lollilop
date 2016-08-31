@@ -18,6 +18,7 @@ import android.widget.Toast;
 import org.fastgame.bbt.BBT;
 import org.fastgame.bbt.R;
 import org.fastgame.bbt.ui.AdColonyActivity;
+import org.fastgame.bbt.ui.AdColonyV4VCActivity;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -173,5 +174,8 @@ public final class ActivityUtils {
         startActivityForResultSafely(activity, new Intent(activity, AdColonyActivity.class), requestCode);
     }
 
+    public static void startAdColonyV4VCActivityForResult(Activity activity, int requestCode) {
+        startActivityForResultSafely(activity, new Intent(activity, AdColonyV4VCActivity.class), requestCode);
+    }
 }
 
