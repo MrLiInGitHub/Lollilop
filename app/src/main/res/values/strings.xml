@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">链接助手</string>
-    <string name="tip">\t免费提交：由服务器处理一天的点击任务。\n\n\t自动提交：观看广告后会随机获得1~5天的自动提交时间。自动提交时间可以累加。\n\n\t广告说明：广告为视频广告，在网络不好的情况下请求不到，如果是使用流量观看请当心您的话费。一天最多只能请求20次广告，超过次数将请求不到。</string>
+    <string name="tip">免费提交：由服务器处理一天的点击任务。\n\n自动提交：观看广告后会随机获得1~5天的自动提交时间。自动提交时间可以累加。\n\n广告说明：广告为视频广告，在网络不好的情况下请求不到，如果是使用流量观看请当心您的话费。一天最多只能请求20次广告，超过次数将请求不到。</string>
     <string name="free_btn_text">免费提交一天</string>
     <string name="ad_btn_text">点击广告自动提交</string>
     <string name="address_text_hint">请在此处输入链接地址</string>
@@ -19,4 +19,8 @@
     <string name="requesting_update_error">请求更新失败,错误码 %1$d</string>
     <string name="inviting_words">给你安利一个耐撕的工具&#8212;&#8212;%1$s,猛戳下载(http://www.fastgame.org)</string>
     <string name="inviting_title">邀请函</string>
+    <string name="share">分享</string>
+    <string name="about">关于</string>
+    <string name="address_history_auto_complete_hint">历史记录(点击空白处隐藏)</string>
+    <string name="author_info">%1$s V%2$s \n\n 作者:\n  @马刚 \n  @MrLi</string>
 </resources>

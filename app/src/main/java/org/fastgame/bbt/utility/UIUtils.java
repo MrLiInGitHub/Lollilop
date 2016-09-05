@@ -4,6 +4,8 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.ColorRes;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.StringRes;
 import android.support.v7.app.AlertDialog;
 import android.widget.Toast;
@@ -45,6 +47,25 @@ public class UIUtils {
 
     public static String getString(@StringRes int resId, Object... args) {
         return BBT.getAppContext().getString(resId, args);
+    }
+
+    public static int getColor(@ColorRes int resId) {
+        return BBT.getAppContext().getResources().getColor(resId);
+    }
+
+    public static AlertDialog showAlertDialog(Context context, @DrawableRes int iconResId, CharSequence title, CharSequence message) {
+        AlertDialog alertDialog = new AlertDialog.Builder(context).create();
+
+        alertDialog.setIcon(iconResId);
+        alertDialog.setTitle(title);
+        alertDialog.setMessage(message);
+        alertDialog.setCancelable(false);
+        alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, UIUtils.getString(R.string.Confirm), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {}
+        });
+
+        return alertDialog;
     }
 
     public static AlertDialog showAlertDialog(Context context, CharSequence message, DialogInterface.OnClickListener confirmListener) {

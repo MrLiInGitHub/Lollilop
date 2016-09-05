@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.WindowManager;
 
 import org.fastgame.bbt.R;
@@ -15,7 +16,7 @@ import org.fastgame.bbt.R;
  * @Author MrLi
  * @Since 08/20/2016
  */
-public class BaseActivity extends Activity {
+public class BaseActivity extends AppCompatActivity {
 
     /**
      * Make {@link android.app.Activity} fill the screen.

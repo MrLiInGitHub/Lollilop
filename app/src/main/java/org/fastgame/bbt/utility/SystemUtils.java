@@ -32,4 +32,14 @@ public class SystemUtils {
         return applicationInfo.metaData.getString(fieldName);
     }
 
+    public static String getVersionName() {
+        Context context = BBT.getAppContext();
+        try {
+            return context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return "N/A";
+    }
+
 }

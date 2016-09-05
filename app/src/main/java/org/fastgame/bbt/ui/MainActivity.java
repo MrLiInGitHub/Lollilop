@@ -4,17 +4,26 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.reward.RewardItem;
+import com.google.android.gms.ads.reward.RewardedVideoAd;
+import com.google.android.gms.ads.reward.RewardedVideoAdListener;
 import com.google.gson.Gson;
 import com.iflytek.autoupdate.IFlytekUpdate;
 import com.iflytek.autoupdate.IFlytekUpdateListener;
@@ -26,12 +35,15 @@ import com.iflytek.autoupdate.UpdateType;
 import org.fastgame.bbt.BBT;
 import org.fastgame.bbt.R;
 import org.fastgame.bbt.connectivity.WebSocketLauncher;
+import org.fastgame.bbt.constant.AdMediatorAccounts;
 import org.fastgame.bbt.constant.RequestCode;
 import org.fastgame.bbt.entity.MsgFromServer;
 import org.fastgame.bbt.entity.MsgToSubmit;
 import org.fastgame.bbt.event.SocketEvent;
+import org.fastgame.bbt.sp.AddressHistoryPreference;
 import org.fastgame.bbt.utility.ActivityUtils;
 import org.fastgame.bbt.utility.NetworkUtils;
+import org.fastgame.bbt.utility.SystemUtils;
 import org.fastgame.bbt.utility.UIUtils;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -43,20 +55,22 @@ import org.greenrobot.eventbus.ThreadMode;
  * @Author MrLi
  * @Since 08/20/2016
  */
-public class MainActivity extends BaseActivity implements View.OnClickListener {
+public class MainActivity extends BaseActivity implements View.OnClickListener, RewardedVideoAdListener {
 
     private static final int MSG_POLL_DURATION = 2000;
     private static final int MSG_WHAT_REQUEST_RESULT = 1;
 
     private final Context mContext = BBT.getAppContext();
 
-    private EditText mAddressView;
+    private AutoCompleteTextView mAddressView;
     private Button mFreeSubmitBtn;
     private Button mAdSubmitBtn;
     private TextView mTipView;
     private ProgressDialog mProgressDialog;
     private AlertDialog mAlertDialog;
-    private View mShareBtn;
+    private View mClearAddressBtn;
+    private RewardedVideoAd mRewardedVideoAd;
+    private Toolbar mToolbar;
 
     private IFlytekUpdate mUpdateManager;
     private boolean isRequestSuccessful;
@@ -82,39 +96,35 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         public void onResult(int i, UpdateInfo updateInfo) {
             if (i == UpdateErrorCode.OK && updateInfo != null) {
                 if (updateInfo.getUpdateType() == UpdateType.NoNeed) {
-                    showAlertDialog(UIUtils.getString(R.string.no_need_to_update));
+                    UIUtils.showLongToast(UIUtils.getString(R.string.no_need_to_update));
                     return;
                 }
                 mUpdateManager.showUpdateInfo(MainActivity.this, updateInfo);
             } else {
-                showAlertDialog(UIUtils.getString(R.string.requesting_update_error, i));
+                UIUtils.showLongToast(UIUtils.getString(R.string.requesting_update_error, i));
             }
         }
     };
 
     private void showAlertDialog(CharSequence message, CharSequence confirmBtnText, DialogInterface.OnClickListener confirmBtnListener,
                                  CharSequence cancelBtnText, DialogInterface.OnClickListener cancelBtnListener) {
-
-        dismissProgressDialog();
-        dismissAlertDialog();
-
-        mAlertDialog = UIUtils.showAlertDialog(this, message, confirmBtnText, confirmBtnListener, cancelBtnText, cancelBtnListener);
-
-        if (!mAlertDialog.isShowing()) {
-            mAlertDialog.show();
-        }
+        showAlertDialog(UIUtils.showAlertDialog(this, message, confirmBtnText, confirmBtnListener, cancelBtnText, cancelBtnListener));
     }
 
     private void showAlertDialog(CharSequence message) {
+        showAlertDialog(UIUtils.showAlertDialog(this, message));
+    }
+
+    private void showAlertDialog(AlertDialog alertDialog) {
+
         dismissProgressDialog();
         dismissAlertDialog();
 
-        mAlertDialog = UIUtils.showAlertDialog(this, message);
+        mAlertDialog = alertDialog;
 
         if (!mAlertDialog.isShowing()) {
             mAlertDialog.show();
         }
-
     }
 
     private void dismissAlertDialog() {
@@ -140,12 +150,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     }
 
-    private void hideProgressDialog() {
-        if (mProgressDialog != null) {
-            mProgressDialog.hide();
-        }
-    }
-
     private void dismissProgressDialog() {
         if (mProgressDialog != null && mProgressDialog.isShowing()) {
             mProgressDialog.dismiss();
@@ -159,7 +163,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         setContentView(R.layout.activity_main);
 
         initView();
+        initToolbar();
         checkUpdate();
+
+        initMobileAd();
 
         EventBus.getDefault().register(MainActivity.this);
     }
@@ -176,19 +183,45 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         dismissAlertDialog();
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        int menuItemId = item.getItemId();
+
+        switch (menuItemId) {
+            case R.id.action_share:
+                shareApp();
+                break;
+            case R.id.action_info:
+                showAboutInfo();
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
     private void initView() {
-        mAddressView = (EditText) findViewById(R.id.address_text);
+        mAddressView = (AutoCompleteTextView) findViewById(R.id.address_text);
         mFreeSubmitBtn = (Button) findViewById(R.id.free_submit_btn);
         mAdSubmitBtn = (Button) findViewById(R.id.ad_submit_btn);
         mTipView = (TextView) findViewById(R.id.tip);
-        mShareBtn = findViewById(R.id.btn_share);
+        mClearAddressBtn = findViewById(R.id.clear_address_btn);
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
 
         mAdSubmitBtn.setOnClickListener(this);
         mFreeSubmitBtn.setOnClickListener(this);
-        mShareBtn.setOnClickListener(this);
+        mClearAddressBtn.setOnClickListener(this);
 
         mTipView.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/cuhuoyijianti.ttf"));
 
+        initAddressAutoComplete();
+        initToolbar();
     }
 
     private void checkUpdate() {
@@ -201,6 +234,45 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         mUpdateManager.autoUpdate(mContext, mIFlytekUpdateListener);
     }
 
+    private void initMobileAd() {
+        MobileAds.initialize(this, AdMediatorAccounts.ADMOB_APP_ID);
+        mRewardedVideoAd = MobileAds.getRewardedVideoAdInstance(this);
+        mRewardedVideoAd.setRewardedVideoAdListener(this);
+    }
+
+    private void initAddressAutoComplete() {
+        if (mAddressView == null) {
+            return;
+        }
+
+        mAddressView.setAdapter(new AddressHistoryPreference().getAllAddressHistory());
+
+        mAddressView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AutoCompleteTextView view = (AutoCompleteTextView) v;
+                view.showDropDown();
+            }
+        });
+    }
+
+    private void initToolbar() {
+        if (mToolbar == null) {
+            return;
+        }
+
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+        mToolbar.setTitle(R.string.app_name);
+        mToolbar.setTitleTextColor(Color.WHITE);
+
+    }
+
+    private void saveAddressHistory(String address) {
+        new AddressHistoryPreference().addAddressHistory(address);
+    }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(SocketEvent event) {
         if (event == null) {
@@ -209,7 +281,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
         switch (event.getType()) {
             case SocketEvent.SOCKET_ON_CONNECTED:
-//                showAlertDialog(UIUtils.getString(R.string.connect_to_server_successfully));
                 WebSocketLauncher.getInstance().sendAllWaitingMessage(event.getWebSocket());
                 break;
             case SocketEvent.SOCKET_ON_TEXT_MESSAGE:
@@ -263,7 +334,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
         showProgressDialog(UIUtils.getString(R.string.server_is_processing_please_wait));
         sendRequest(isFree);
-
     }
 
     private void sendRequest(final boolean isFree) {
@@ -316,8 +386,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     }
 
     private void showAdActivity() {
-//        ActivityUtils.startAdColonyActivityForResult(this, RequestCode.REQUEST_CODE_WATCH_AD);
-        ActivityUtils.startAdColonyV4VCActivityForResult(this, RequestCode.REQUEST_CODE_WATCH_AD);
+        if (!mRewardedVideoAd.isLoaded()) {
+            showProgressDialog(UIUtils.getString(R.string.sending_ad_request));
+            mRewardedVideoAd.loadAd(AdMediatorAccounts.ADMOB_AD_UNIT_ID, new AdRequest.Builder().build());
+        }
     }
 
     private void shareApp() {
@@ -331,17 +403,29 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         ActivityUtils.startActivitySafely(mContext, Intent.createChooser(intent, UIUtils.getString(R.string.inviting_title)));
     }
 
+    private void clearAddressContent() {
+        if (mAddressView != null) {
+            mAddressView.setText("");
+        }
+    }
+
+    private void showAboutInfo() {
+        showAlertDialog(UIUtils.showAlertDialog(this, R.drawable.lollipop, UIUtils.getString(R.string.about),
+                UIUtils.getString(R.string.author_info, UIUtils.getString(R.string.app_name), SystemUtils.getVersionName())));
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.free_submit_btn:
+                saveAddressHistory(getContentFromAddressView());
                 sendLinkRequest(true);
                 break;
             case R.id.ad_submit_btn:
                 requestAdvertisement();
                 break;
-            case R.id.btn_share:
-                shareApp();
+            case R.id.clear_address_btn:
+                clearAddressContent();
                 break;
         }
     }
@@ -361,4 +445,36 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         }
     }
 
+    @Override
+    public void onRewardedVideoAdLoaded() {
+        if (mRewardedVideoAd.isLoaded()) {
+            mRewardedVideoAd.show();
+        }
+    }
+
+    @Override
+    public void onRewardedVideoAdOpened() {}
+
+    @Override
+    public void onRewardedVideoStarted() {
+        dismissProgressDialog();
+        dismissAlertDialog();
+    }
+
+    @Override
+    public void onRewardedVideoAdClosed() {}
+
+    @Override
+    public void onRewarded(RewardItem rewardItem) {
+        sendLinkRequest(false);
+        saveAddressHistory(getContentFromAddressView());
+    }
+
+    @Override
+    public void onRewardedVideoAdLeftApplication() {}
+
+    @Override
+    public void onRewardedVideoAdFailedToLoad(int i) {
+        showAlertDialog(UIUtils.getString(R.string.no_ad_available));
+    }
 }
