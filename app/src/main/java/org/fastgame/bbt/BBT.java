@@ -3,6 +3,7 @@ package org.fastgame.bbt;
 import android.app.Application;
 import android.content.Context;
 import android.os.Handler;
+import android.support.multidex.MultiDex;
 
 /**
  * @Author MrLi
@@ -18,6 +19,12 @@ public class BBT extends Application {
         super.onCreate();
 
         mContext = getApplicationContext();
+    }
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(this);
     }
 
     public static Context getAppContext() {
