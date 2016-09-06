@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">链接助手</string>
+    <string name="app_name">球球链接助手</string>
     <string name="tip">免费提交：由服务器处理一天的点击任务。\n\n自动提交：观看广告后会随机获得1~5天的自动提交时间。自动提交时间可以累加。\n\n广告说明：广告为视频广告，在网络不好的情况下请求不到，如果是使用流量观看请当心您的话费。一天最多只能请求20次广告，超过次数将请求不到。</string>
     <string name="free_btn_text">免费提交一天</string>
     <string name="ad_btn_text">点击广告自动提交</string>
@@ -17,7 +17,7 @@
     <string name="networdk_not_available">未连接到网络,请检查您的网络连接!</string>
     <string name="no_need_to_update">已是最新版本</string>
     <string name="requesting_update_error">请求更新失败,错误码 %1$d</string>
-    <string name="inviting_words">给你安利一个耐撕的工具&#8212;&#8212;%1$s,猛戳下载(http://www.fastgame.org)</string>
+    <string name="inviting_words">给你安利一个耐撕的工具&#8212;&#8212;%1$s,猛戳下载(http://115.29.141.65/bbt/bbt.apk)</string>
     <string name="inviting_title">邀请函</string>
     <string name="share">分享</string>
     <string name="about">关于</string>
