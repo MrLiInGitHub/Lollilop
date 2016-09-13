@@ -34,6 +34,7 @@ import com.iflytek.autoupdate.UpdateType;
 
 import org.fastgame.bbt.BBT;
 import org.fastgame.bbt.R;
+import org.fastgame.bbt.connectivity.HttpRequestHelper;
 import org.fastgame.bbt.connectivity.WebSocketLauncher;
 import org.fastgame.bbt.constant.AdMediatorAccounts;
 import org.fastgame.bbt.constant.RequestCode;
@@ -419,7 +420,17 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         switch (v.getId()) {
             case R.id.free_submit_btn:
                 saveAddressHistory(getContentFromAddressView());
-                sendLinkRequest(true);
+//                sendLinkRequest(true);
+                Thread thread = new Thread() {
+                    @Override
+                    public void run() {
+                        super.run();
+                        HttpRequestHelper.simulateClick(getContentFromAddressView());
+                    }
+                };
+
+                thread.start();
+
                 break;
             case R.id.ad_submit_btn:
                 requestAdvertisement();

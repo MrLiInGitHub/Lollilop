@@ -259,6 +259,7 @@ public class WebSocketLauncher {
 
         try {
             final WebSocket webSocket = mWebSocketFactory.createSocket(serverAddress);
+            mWebSockets.put(serverAddress, webSocket);
             webSocket.addListener(webSocketListener);
 
             AsyncTask.execute(new Runnable() {

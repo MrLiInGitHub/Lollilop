@@ -73,7 +73,7 @@ public class PrepareActivity extends BaseActivity {
                 mInterstitialAd.loadAd(new AdRequest.Builder()
                         .build());
             }
-        }, 3 * 1000);
+        }, 2 * 1000);
 
     }
 
