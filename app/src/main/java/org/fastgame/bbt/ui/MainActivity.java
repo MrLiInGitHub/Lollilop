@@ -397,7 +397,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("text/plain");
         intent.putExtra(Intent.EXTRA_SUBJECT, UIUtils.getString(R.string.inviting_title));
-        intent.putExtra(Intent.EXTRA_TEXT, UIUtils.getString(R.string.inviting_words, UIUtils.getString(R.string.app_name)));
+        intent.putExtra(Intent.EXTRA_TEXT, UIUtils.getString(R.string.inviting_words, UIUtils.getString(R.string.app_name), UIUtils.getString(R.string.download_address)));
         intent.putExtra(Intent.EXTRA_TITLE, UIUtils.getString(R.string.inviting_title));
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
@@ -419,13 +419,30 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.free_submit_btn:
+
+                if (TextUtils.isEmpty(getContentFromAddressView())) {
+                    showAlertDialog(UIUtils.getString(R.string.address_cannot_be_empty));
+                    return;
+                }
+
                 saveAddressHistory(getContentFromAddressView());
-//                sendLinkRequest(true);
+
                 Thread thread = new Thread() {
                     @Override
                     public void run() {
                         super.run();
-                        HttpRequestHelper.simulateClick(getContentFromAddressView());
+                        final boolean isBalls = HttpRequestHelper.simulateClick(getContentFromAddressView());
+                            MainActivity.this.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if (isBalls) {
+                                        sendLinkRequest(true);
+                                    } else {
+                                        showAlertDialog(UIUtils.getString(R.string.click_finished_tip));
+                                    }
+
+                                }
+                            });
                     }
                 };
 

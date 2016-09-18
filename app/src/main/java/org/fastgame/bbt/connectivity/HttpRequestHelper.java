@@ -18,10 +18,16 @@ import java.net.URL;
  */
 public class HttpRequestHelper {
 
-    public static void simulateClick(String host) {
+    /**
+     * 返回true 这说明是球球大作战的链接需要向服务器发送请求
+     *
+     * @param host
+     * @return
+     */
+    public static boolean simulateClick(String host) {
 
         if (TextUtils.isEmpty(host)) {
-            return;
+            return false;
         }
 
         try {
@@ -34,17 +40,22 @@ public class HttpRequestHelper {
 
             if (isMonsterLink(url)) {
                 targetUrl = getMonsterShareUrl(url);
+                printStr(targetUrl);
                 totalTimes = 5;
             } else if (isBallsLink(url)) {
-                targetUrl = getBallsShareUrl(url);
-                totalTimes = 5;
+                return true;
             }
 
-            getHttpUrlConnectionResponseContent(getHttpUrlConnection(targetUrl));
+            int tmpIndex = totalTimes;
+            for (int i = 0; i < tmpIndex && i < 2 * totalTimes; i++) {
+                getHttpUrlConnectionResponseContent(getHttpUrlConnection(targetUrl));
+            }
 
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        return false;
 
     }
 
@@ -148,7 +159,8 @@ public class HttpRequestHelper {
     }
 
     public static String getMonsterShareUrl(String url) {
-        return isEmpty(url) ? "" : "http://udpdcs.4399sy.com/get_share_data.php?id=" + url.substring(url.indexOf("?id=") + 4, url.indexOf("&s="));
+        return isEmpty(url) ? "" : "http://udpdcs.4399sy.com/get_share_data.php"
+                + url.substring(url.indexOf("?id="));
     }
 
     public static String getBallsShareUrl(String url) {

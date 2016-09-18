@@ -17,10 +17,12 @@
     <string name="networdk_not_available">未连接到网络,请检查您的网络连接!</string>
     <string name="no_need_to_update">已是最新版本</string>
     <string name="requesting_update_error">请求更新失败,错误码 %1$d</string>
-    <string name="inviting_words">给你安利一个耐撕的工具&#8212;&#8212;%1$s,猛戳下载( https://item.taobao.com/item.htm?spm=686.1000925.0.0.R7ULpy&amp;id=538139338253 )</string>
+    <string name="download_address">https://item.taobao.com/item.htm?spm=686.1000925.0.0.R7ULpy&amp;id=538139338253</string>
+    <string name="inviting_words">给你安利一个耐撕的工具&#8212;&#8212;%1$s,猛戳下载( %2$s )</string>
     <string name="inviting_title">邀请函</string>
     <string name="share">分享</string>
     <string name="about">关于</string>
     <string name="address_history_auto_complete_hint">历史记录(点击空白处隐藏)</string>
     <string name="author_info">%1$s V%2$s \n\n 怪兽大作战交流QQ群一: (586238284) \n\n  怪兽大作战交流QQ群二: (584666015)  \n\n </string>
+    <string name="click_finished_tip">已完成点击，请进入游戏中查看。</string>
 </resources>
