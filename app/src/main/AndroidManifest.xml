@@ -109,6 +109,8 @@
         <service android:name="com.iflytek.autoupdate.IFlytekDownloadService"/>
 
         <meta-data android:name="IFLYTEK_APPKEY" android:value="57c55e77"/>
+        <meta-data android:value="57e60044e0f55a04e40003aa" android:name="UMENG_APPKEY"></meta-data>
+        <meta-data android:value="umeng" android:name="UMENG_CHANNEL"/>
     </application>
 
 </manifest>

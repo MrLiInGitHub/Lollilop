@@ -7,8 +7,8 @@ android {
         applicationId "org.fastgame.bbt"
         minSdkVersion 9
         targetSdkVersion 22
-        versionCode 7
-        versionName "1.0.6"
+        versionCode 8
+        versionName "1.0.7"
         multiDexEnabled true
     }
     buildTypes {
@@ -38,6 +38,7 @@ dependencies {
     compile files('libs/dagger-2.4.jar')
     compile files('libs/javax.inject-1.jar')
     compile 'com.android.support:multidex:1.0.1'
+    compile 'com.umeng.analytics:analytics:latest.integration'
 }
 apply plugin: 'com.google.gms.google-services'
 

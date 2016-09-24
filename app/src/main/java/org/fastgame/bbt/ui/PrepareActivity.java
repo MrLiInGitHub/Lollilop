@@ -6,10 +6,12 @@ import android.os.Handler;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
+import com.umeng.analytics.MobclickAgent;
 
 import org.fastgame.bbt.BBT;
 import org.fastgame.bbt.R;
 import org.fastgame.bbt.constant.AdMediatorAccounts;
+import org.fastgame.bbt.event.UmengEvent;
 import org.fastgame.bbt.utility.ActivityUtils;
 import org.fastgame.bbt.utility.UIUtils;
 
@@ -35,6 +37,7 @@ public class PrepareActivity extends BaseActivity {
         public void onAdFailedToLoad(int i) {
             super.onAdFailedToLoad(i);
             jumpIntoApp();
+            MobclickAgent.onEvent(PrepareActivity.this, UmengEvent.UMENG_EVENT_STARTUP_AD_FAILED);
         }
 
         @Override
@@ -53,6 +56,7 @@ public class PrepareActivity extends BaseActivity {
 
             if (mInterstitialAd.isLoaded()) {
                 mInterstitialAd.show();
+                MobclickAgent.onEvent(PrepareActivity.this, UmengEvent.UMENG_EVENT_STARTUP_AD_SUCCESS);
             }
         }
     };
@@ -70,6 +74,7 @@ public class PrepareActivity extends BaseActivity {
         mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
+                MobclickAgent.onEvent(PrepareActivity.this, UmengEvent.UMENG_EVENT_STARTUP_AD_REQUEST);
                 mInterstitialAd.loadAd(new AdRequest.Builder()
                         .build());
             }

@@ -31,6 +31,7 @@ import com.iflytek.autoupdate.UpdateConstants;
 import com.iflytek.autoupdate.UpdateErrorCode;
 import com.iflytek.autoupdate.UpdateInfo;
 import com.iflytek.autoupdate.UpdateType;
+import com.umeng.analytics.MobclickAgent;
 
 import org.fastgame.bbt.BBT;
 import org.fastgame.bbt.R;
@@ -41,6 +42,7 @@ import org.fastgame.bbt.constant.RequestCode;
 import org.fastgame.bbt.entity.MsgFromServer;
 import org.fastgame.bbt.entity.MsgToSubmit;
 import org.fastgame.bbt.event.SocketEvent;
+import org.fastgame.bbt.event.UmengEvent;
 import org.fastgame.bbt.sp.AddressHistoryPreference;
 import org.fastgame.bbt.utility.ActivityUtils;
 import org.fastgame.bbt.utility.NetworkUtils;
@@ -49,6 +51,8 @@ import org.fastgame.bbt.utility.UIUtils;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+
+import cn.sharesdk.integhelper.Main;
 
 /**
  * The main Activity is for user operation to interact.
@@ -290,6 +294,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 if (msg != null && !TextUtils.isEmpty(msg.line0) && msg.line0.equals("success")) {
                     showAlertDialog(processMsgFromServer(msg));
                     isRequestSuccessful = true;
+                    mHandler.removeMessages(MSG_WHAT_REQUEST_RESULT);
                 } else {
                     showAlertDialog(processMsgFromServer(msg));
                 }
@@ -350,6 +355,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         handlerMsg.obj = isFree;
 
         if (isFree) {
+            MobclickAgent.onEvent(MainActivity.this, UmengEvent.UMENG_EVENT_FREE_SUBMIT);
             mHandler.sendMessageDelayed(handlerMsg, MSG_POLL_DURATION);
         }
     }
@@ -388,6 +394,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
     private void showAdActivity() {
         if (!mRewardedVideoAd.isLoaded()) {
+            MobclickAgent.onEvent(MainActivity.this, UmengEvent.UMENG_EVENT_SUBMIT_AD_REQUEST);
             showProgressDialog(UIUtils.getString(R.string.sending_ad_request));
             mRewardedVideoAd.loadAd(AdMediatorAccounts.ADMOB_AD_UNIT_ID, new AdRequest.Builder().build());
         }
@@ -476,6 +483,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     @Override
     public void onRewardedVideoAdLoaded() {
         if (mRewardedVideoAd.isLoaded()) {
+            MobclickAgent.onEvent(MainActivity.this, UmengEvent.UMENG_EVENT_SUBMIT_AD_SUCCESS);
             mRewardedVideoAd.show();
         }
     }
@@ -504,5 +512,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     @Override
     public void onRewardedVideoAdFailedToLoad(int i) {
         showAlertDialog(UIUtils.getString(R.string.no_ad_available));
+        MobclickAgent.onEvent(MainActivity.this, UmengEvent.UMENG_EVENT_SUBMIT_AD_FAILED);
     }
 }
