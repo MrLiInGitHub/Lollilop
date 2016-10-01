@@ -1,10 +1,8 @@
 package org.fastgame.bbt.connectivity;
 
 import android.text.TextUtils;
-
 import org.fastgame.bbt.BBT;
 import org.fastgame.bbt.utility.LogUtils;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -38,17 +36,19 @@ public class HttpRequestHelper {
             String targetUrl = "";
             int totalTimes = 0;
 
-            if (isMonsterLink(url)) {
-                targetUrl = getMonsterShareUrl(url);
+            if (isBattleOfMonstersLink(url)) {
+                targetUrl = getBattleOfMonstersShareUrl(url);
                 printStr(targetUrl);
                 totalTimes = 5;
-            } else if (isBallsLink(url)) {
+            } else if (isBattleOfBallsLink(url)) {
+                return true;
+            } else if (isBattleOfWormsLink(url)) {
                 return true;
             }
 
             int tmpIndex = totalTimes;
             for (int i = 0; i < tmpIndex && i < 2 * totalTimes; i++) {
-                getHttpUrlConnectionResponseContent(getHttpUrlConnection(targetUrl));
+                printStr(getHttpUrlConnectionResponseContent(getHttpUrlConnection(targetUrl)));
             }
 
         } catch (IOException e) {
@@ -94,11 +94,15 @@ public class HttpRequestHelper {
         }
     }
 
-    public static boolean isMonsterLink(String url) {
-        return !isEmpty(url) && url.contains("4399sy.com");
+    public static boolean isBattleOfMonstersLink(String url) {
+        return !isEmpty(url) && url.contains("4399sy.com/hd/tgxt/gsdzz");
     }
 
-    public static boolean isBallsLink(String url) {
+    public static boolean isBattleOfWormsLink(String url) {
+        return !TextUtils.isEmpty(url) && url.contains("4399sy.com/hd/tgxt/ccdzz");
+    }
+
+    public static boolean isBattleOfBallsLink(String url) {
         return !isEmpty(url) && url.contains("www.battleofballs.com");
     }
 
@@ -158,7 +162,12 @@ public class HttpRequestHelper {
         }
     }
 
-    public static String getMonsterShareUrl(String url) {
+    public static String getBattleOfMonstersShareUrl(String url) {
+        return isEmpty(url) ? "" : "http://udpdcs.4399sy.com/get_share_data.php"
+                + url.substring(url.indexOf("?id="));
+    }
+
+    public static String getBattleOfWormsShareUrl(String url) {
         return isEmpty(url) ? "" : "http://udpdcs.4399sy.com/get_share_data.php"
                 + url.substring(url.indexOf("?id="));
     }
